@@ -53,10 +53,29 @@ namespace BMI
         public Dictionary<string, int> GetBmiPopulationReport(
             List<UserDetails> measurmentsList)
         {
-            return measurmentsList
-                .Select(o => GetBmiCategory(GetBmiIndex(o.Height, o.Weight)))
+            return GetBmiIndexForAllEntries(measurmentsList)
+                .Select(GetBmiCategory)
                 .GroupBy(o => o)
                 .ToDictionary(category => category.Key, category => category.Count());
+        }
+
+        public double GetUsersPercentile(List<UserDetails> measurmentsList, double userToFind)
+        {
+            var allEntries = GetBmiIndexForAllEntries(measurmentsList);
+            var list = allEntries.Append(userToFind).ToList();
+
+            list.Sort();
+            var indexInList = list.BinarySearch(userToFind);
+
+            var rank =  indexInList / (double)list.Count * 100;
+
+            return Math.Round(rank, MidpointRounding.AwayFromZero);
+        }
+
+        private IEnumerable<double> GetBmiIndexForAllEntries(IEnumerable<UserDetails> measurmentsList)
+        {
+            return measurmentsList
+                .Select(o => GetBmiIndex(o.Height, o.Weight));
         }
     }
 }

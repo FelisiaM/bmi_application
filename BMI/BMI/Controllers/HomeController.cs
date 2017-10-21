@@ -62,6 +62,10 @@ namespace BMI.Controllers
                             Count = o.Value
                         })
                     .ToList();
+
+                var usersRanking = _bmiReport.GetUsersPercentile(population, bmiIndex);
+
+                ViewData["UsersRanking"] = usersRanking;
             }
 
             return View();

@@ -6,8 +6,10 @@
 
 @Html.Partial("UserInput")
 
-<h3>@ViewData["Result"]</h3>
+<h4>@ViewData["Result"]</h4>
 
+<h3>Population BMI Report</h3>
+<br/>
 <table border="1">
     <tr>
         <th>
@@ -31,3 +33,5 @@
     }
 
 </table>
+
+<h4> You rank in @ViewData["UsersRanking"]% percentile of the population.</h4>
