@@ -2,6 +2,7 @@
 {
     public interface IBmiReport
     {
-        double GetBmi(double height, double weight);
+        double GetBmiIndex(double height, double weight);
+        string GetBmiCategory(double index);
     }
 }

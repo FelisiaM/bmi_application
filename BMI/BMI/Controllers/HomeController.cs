@@ -27,13 +27,21 @@ namespace BMI.Controllers
         [HttpPost]
         public IActionResult GuestUser(UserDetails details)
         {
-            ViewData["User"] = details.Name;
+            
             if (!ModelState.IsValid)
             {
                 return View();
             }
 
-            ViewData["BMI"] = _bmiReport.GetBmi(details.Height, details.Weight);
+            var bmiIndex = _bmiReport.GetBmiIndex(details.Height, details.Weight);
+            var bmiCategory = _bmiReport.GetBmiCategory(bmiIndex);
+
+            if (bmiCategory.Equals(BmiCategory.Undefined))
+            {
+                ViewData["Result"] = "Could not define your BMI category.";
+            }
+            ViewData["Result"] = "Your BMI Index is " + bmiIndex + "and BMI Category is " + bmiCategory;
+
             return View();
         }
 
