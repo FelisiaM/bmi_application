@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using BMI.Models;
 
 namespace BMI
 {
@@ -46,14 +49,14 @@ namespace BMI
             }
             return BmiCategory.Undefined;
         }
-    }
 
-    public class BmiCategory
-    {
-        public static string Underweight => "Underweight";
-        public static string Normal => "Normal";
-        public static string Preobesity => "Pre-obesity";
-        public static string ObesityClass1 => "Obesity Class I";
-        public static string Undefined => "Undefined";
+        public Dictionary<string, int> GetBmiPopulationReport(
+            List<UserDetails> measurmentsList)
+        {
+            return measurmentsList
+                .Select(o => GetBmiCategory(GetBmiIndex(o.Height, o.Weight)))
+                .GroupBy(o => o)
+                .ToDictionary(category => category.Key, category => category.Count());
+        }
     }
 }

@@ -28,8 +28,8 @@ namespace BMI
         {
             services.AddMvc();
 
-            services.AddScoped<IBmiReport, BmiReport>();
-
+            services.AddTransient<IBmiReport, BmiReport>();
+            services.AddTransient<ICsvReader, CsvReader>();
 
             // enforce all requests to use ssl - global config
             services.Configure<MvcOptions>(options =>

@@ -2,38 +2,32 @@
     ViewData["Title"] = "Guest User";
 }
 
+@using BMI.Models
 
-@model BMI.Models.UserDetails
-
-
-@using (Html.BeginForm("GuestUser", "Home", FormMethod.Post))
-{
-    <div class="form-horizontal">
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Height, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-7">
-                <p>Put your height in metres</p>
-                <br />
-                @Html.EditorFor(model => model.Height, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Height, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Weight, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-7">
-                <p>Put your weight in kilograms</p>
-                <br />
-                @Html.EditorFor(model => model.Weight, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Weight, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <h4>@ViewBag.Error</h4>
-        <input type="submit" value="Get BMI Report" />
-    </div>
-}
+@Html.Partial("UserInput")
 
 <h3>@ViewData["Result"]</h3>
+
+<table border="1">
+    <tr>
+        <th>
+            Category
+        </th>
+        <th>
+            Count
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in (List<ReportModel>) ViewData["PopulationReport"]) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Count)
+            </td>
+        </tr>
+    }
+
+</table>

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using BMI;
+using BMI.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BMI_Tests
@@ -158,6 +160,61 @@ namespace BMI_Tests
             Assert.AreEqual(BmiCategory.Undefined, result, "Assertion failed for: " + index);
         }
 
+        [TestMethod]
+        public void Should_GroupByCategory_When_CallingGetRmiReport()
+        {
+            // [arrange]
+            var list = new List<UserDetails>()
+            {
+                new UserDetails{ Height = 1.50,Weight = 40}, // underweight
+                new UserDetails{ Height = 1.55,Weight = 45}, // normal
+                new UserDetails{ Height = 1.55,Weight = 60}, // pre-obesity
+                new UserDetails{ Height = 1.55,Weight = 80}, // ovesity class 1
+                new UserDetails{ Height = 1.55,Weight = 100}  // undefined
+            };
 
+            var underTest = new BmiReport();
+
+            // [act]
+            var result = underTest.GetBmiPopulationReport(list);
+
+            // [assert]
+            Assert.AreEqual(1, result.GetValueOrDefault(BmiCategory.Underweight), "Assertion failed for " + BmiCategory.Underweight);
+            Assert.AreEqual(1, result.GetValueOrDefault(BmiCategory.Normal), "Assertion failed for " + BmiCategory.Normal);
+            Assert.AreEqual(1, result.GetValueOrDefault(BmiCategory.Preobesity), "Assertion failed for " + BmiCategory.Preobesity);
+            Assert.AreEqual(1, result.GetValueOrDefault(BmiCategory.ObesityClass1), "Assertion failed for " + BmiCategory.ObesityClass1);
+            Assert.AreEqual(1, result.GetValueOrDefault(BmiCategory.Undefined), "Assertion failed for " + BmiCategory.Undefined);
+        }
+
+        [TestMethod]
+        public void Should_GroupByResultsCategory_When_CallingGetRmiReport()
+        {
+            // [arrange]
+            var list = new List<UserDetails>()
+            {
+                new UserDetails{ Height = 1.50,Weight = 40}, // underweight
+                new UserDetails{ Height = 1.50,Weight = 40}, // underweight
+
+                new UserDetails{ Height = 1.55,Weight = 45}, // normal
+
+                new UserDetails{ Height = 1.55,Weight = 60}, // pre-obesity
+                new UserDetails{ Height = 1.55,Weight = 60}, // pre-obesity
+                new UserDetails{ Height = 1.55,Weight = 60}, // pre-obesity
+
+                new UserDetails{ Height = 1.55,Weight = 80}, // ovesity class 1
+            };
+
+            var underTest = new BmiReport();
+
+            // [act]
+            var result = underTest.GetBmiPopulationReport(list);
+
+            // [assert]
+            Assert.AreEqual(2, result.GetValueOrDefault(BmiCategory.Underweight), "Assertion failed for " + BmiCategory.Underweight);
+            Assert.AreEqual(1, result.GetValueOrDefault(BmiCategory.Normal), "Assertion failed for " + BmiCategory.Normal);
+            Assert.AreEqual(3, result.GetValueOrDefault(BmiCategory.Preobesity), "Assertion failed for " + BmiCategory.Preobesity);
+            Assert.AreEqual(1, result.GetValueOrDefault(BmiCategory.ObesityClass1), "Assertion failed for " + BmiCategory.ObesityClass1);
+            Assert.AreEqual(0, result.GetValueOrDefault(BmiCategory.Undefined), "Assertion failed for " + BmiCategory.Undefined);
+        }
     }
 }
