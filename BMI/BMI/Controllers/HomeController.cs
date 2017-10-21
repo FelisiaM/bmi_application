@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using BMI.Models;
 
@@ -10,22 +6,34 @@ namespace BMI.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IBmiReport _bmiReport;
+
+        public HomeController(IBmiReport bmiReport)
+        {
+            _bmiReport = bmiReport;
+        }
+        
         public IActionResult Index()
         {
+            
             return View();
         }
 
-        public IActionResult About()
+        public IActionResult GuestUser()
         {
-            ViewData["Message"] = "Your application description page.";
-
             return View();
         }
 
-        public IActionResult Contact()
+        [HttpPost]
+        public IActionResult GuestUser(UserDetails details)
         {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["User"] = details.Name;
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
 
+            ViewData["BMI"] = _bmiReport.GetBmi(details.Height, details.Weight);
             return View();
         }
 

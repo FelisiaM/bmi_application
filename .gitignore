@@ -1,0 +1,12 @@
+################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/BMI/.vs
+/BMI/BMI/bin/Debug/netcoreapp2.0
+BMI/BMI/obj/
+BMI/BMI_Tests/bin/
+BMI/BMI_Tests/obj/
+BMI/packages/MSTest.TestAdapter.1.1.18/MSTest.TestAdapter.1.1.18.nupkg
+BMI/packages/
+BMI_Solution/.vs/
