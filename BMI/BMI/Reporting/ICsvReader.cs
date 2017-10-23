@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using BMI.Models;
 
-namespace BMI
+namespace BMI.Reporting
 {
     public interface ICsvReader
     {

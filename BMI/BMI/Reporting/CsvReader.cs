@@ -2,7 +2,7 @@
 using System.IO;
 using BMI.Models;
 
-namespace BMI
+namespace BMI.Reporting
 {
     public class CsvReader : ICsvReader
     {

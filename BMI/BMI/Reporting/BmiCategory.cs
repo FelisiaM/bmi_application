@@ -1,4 +1,4 @@
-﻿namespace BMI
+﻿namespace BMI.Reporting
 {
     public class BmiCategory
     {

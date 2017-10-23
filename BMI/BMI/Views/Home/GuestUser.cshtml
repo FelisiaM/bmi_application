@@ -2,36 +2,6 @@
     ViewData["Title"] = "Guest User";
 }
 
-@using BMI.Models
-
 @Html.Partial("UserInput")
 
-<h4>@ViewData["Result"]</h4>
-
-<h3>Population BMI Report</h3>
-<br/>
-<table border="1">
-    <tr>
-        <th>
-            Category
-        </th>
-        <th>
-            Count
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in (List<ReportModel>) ViewData["PopulationReport"]) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Count)
-            </td>
-        </tr>
-    }
-
-</table>
-
-<h4> You rank in @ViewData["UsersRanking"]% percentile of the population.</h4>
+@Html.Partial("BmiReport")

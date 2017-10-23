@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using BMI;
 using BMI.Models;
+using BMI.Reporting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BMI_Tests

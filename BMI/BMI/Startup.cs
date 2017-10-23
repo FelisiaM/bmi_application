@@ -8,8 +8,13 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 using System.IdentityModel.Tokens.Jwt;
+using System.Threading.Tasks;
+using BMI.Authorisation;
+using BMI.Reporting;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.IdentityModel.Tokens;
 
 
 namespace BMI
@@ -26,10 +31,10 @@ namespace BMI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
-
+            // Add application services
             services.AddTransient<IBmiReport, BmiReport>();
             services.AddTransient<ICsvReader, CsvReader>();
+            services.AddTransient<ITokenHandler, TokenHandler>();
 
             // enforce all requests to use ssl - global config
             services.Configure<MvcOptions>(options =>
@@ -37,19 +42,38 @@ namespace BMI
                 options.Filters.Add(new RequireHttpsAttribute());
             });
 
-            
+            // Add framework services
+            services.AddMvc();
+
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                })
+                .AddCookie()
+                .AddOpenIdConnect(options =>
+                {
+                    options.Authority = Configuration["Authority"];
+                    options.ClientId = Configuration["Client"];
+                    options.CallbackPath = Configuration["CallbackPath"];
+
+                    options.ResponseType = OpenIdConnectResponseType.IdToken;
+                    options.AuthenticationMethod = OpenIdConnectRedirectBehavior.FormPost;
+
+                    options.GetClaimsFromUserInfoEndpoint = true;
+                    options.RequireHttpsMetadata = false;
+                    options.MetadataAddress = Configuration["MetadataAddress"];
+
+                    options.SaveTokens = true;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
             }
 
             app.UseStaticFiles();
@@ -62,9 +86,11 @@ namespace BMI
             });
 
             // Redirects all HTTP requests to HTTPS:
-            var options = new RewriteOptions()
-                            .AddRedirectToHttps();
-            app.UseRewriter(options); 
+            app.UseRewriter(
+                new RewriteOptions()
+                .AddRedirectToHttps());
+            
+            app.UseAuthentication();
         }
     }
 }
