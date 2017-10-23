@@ -6,6 +6,8 @@ using BMI.Authorisation;
 using Microsoft.AspNetCore.Mvc;
 using BMI.Models;
 using BMI.Reporting;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 
 namespace BMI.Controllers
@@ -38,15 +40,15 @@ namespace BMI.Controllers
             try
             {
                 Request.Form.TryGetValue("id_token", out var idToken);
-
                 var jwtToken = _tokenHandler.GetJwtSecurityToken(idToken);
+
                 if (!_tokenHandler.IsAuthorised(jwtToken))
                 {
                     return View("UserInput");
                 }
                 
                 ViewData["UserName"] = _tokenHandler.GetUserName(jwtToken);
-                BuildBMIReport(
+                BuildBmiReport(
                     _tokenHandler.GetUserDetailsFromClaims(jwtToken));
 
                 return View();
@@ -73,12 +75,19 @@ namespace BMI.Controllers
                 return View();
             }
 
-            BuildBMIReport(details);
+            BuildBmiReport(details);
 
             return View();
         }
 
-        private void BuildBMIReport(UserDetails details)
+        public IActionResult Signout()
+        {
+            return SignOut(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                OpenIdConnectDefaults.AuthenticationScheme);
+        }
+
+        private void BuildBmiReport(UserDetails details)
         {
             var bmiIndex = _bmiReport.GetBmiIndex(details.Height, details.Weight);
             var bmiCategory = _bmiReport.GetBmiCategory(bmiIndex);
