@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,15 +6,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
-using System.IdentityModel.Tokens.Jwt;
-using System.Threading.Tasks;
 using BMI.Authorisation;
 using BMI.Reporting;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-
 
 namespace BMI
 {
@@ -34,6 +28,7 @@ namespace BMI
             // Add application services
             services.AddTransient<IBmiReport, BmiReport>();
             services.AddTransient<ICsvReader, CsvReader>();
+            services.AddTransient<IFullReportBuilder, FullReportBuilder>();
             services.AddTransient<ITokenHandler, TokenHandler>();
 
             // enforce all requests to use ssl - global config

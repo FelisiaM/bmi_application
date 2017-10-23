@@ -1,5 +1,7 @@
 ﻿
-<h4>@ViewData["Result"]</h4>
+@model FullBmiReport
+
+<h4>Your BMI Index is @Model.BmiIndex and BMI Category is @Model.BmiCategory</h4>
 
 <h4>Population BMI Report</h4>
 <br />
@@ -15,7 +17,7 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var item in (List<ReportModel>)ViewData["PopulationReport"])
+    @foreach (var item in Model.ReportModels)
     {
         <tr>
             <td>
@@ -28,4 +30,4 @@
     }
     </tbody>
 </table>
-<h4> You rank in @ViewData["UsersRanking"]% percentile of the population.</h4>
+<h4> You rank in @Model.Percentile% percentile of the population.</h4>
