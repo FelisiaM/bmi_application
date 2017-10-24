@@ -1,0 +1,33 @@
+﻿
+@model FullBmiReport
+
+<h4>Your BMI Index is @Model.BmiIndex and BMI Category is @Model.BmiCategory</h4>
+
+<h4>Population BMI Report</h4>
+<br />
+<table class="table table-striped table-bordered">
+    <thead>
+    <tr>
+        <th>
+            Category
+        </th>
+        <th>
+            Count
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.ReportModels)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Count)
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<h4> You rank in @Model.Percentile% percentile of the population.</h4>
